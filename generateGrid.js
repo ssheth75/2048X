@@ -29,53 +29,26 @@ function updateTile(tile, num) {
   }
 }
 
+
 function initGame() {
-  size = document.getElementById("gridSizeIn").value;
-  board = createBoard(size);
+  var size = document.getElementById("gridSizeIn").value;
+  var board = document.getElementById("board");
+  board.style.setProperty("--grid-size", size);
 
-  board[0][0] = 2;
-  board[0][1] = 2;
-  board[0][2] = 2;
-  board[0][3] = 2;
-  board[1][0] = 2;
-  board[1][1] = 2;
-  board[1][2] = 2;
-  board[1][3] = 2;
-  board[2][0] = 4;
-  board[2][1] = 4;
-  board[2][2] = 8;
-  board[2][3] = 8;
-  board[3][0] = 4;
-  board[3][1] = 4;
-  board[3][2] = 8;
-  board[3][3] = 8;
+  // Clear existing cells
+  board.innerHTML = "";
 
-  var boardContainer = document.getElementById("board");
-
-  // Clear existing content of the board
-  boardContainer.innerHTML = "";
-
-  // Calculate the size of each tile
-  var tileSize = 700 / size;
-
-  // Update CSS grid-template-columns and grid-template-rows
-  boardContainer.style.gridTemplateColumns = `repeat(${size}, 1fr)`;
-  boardContainer.style.gridTemplateRows = `repeat(${size}, 1fr)`;
-
-  for (var row = 0; row < size; ++row) {
-    for (var col = 0; col < size; ++col) {
-      let tile = document.createElement("div");
-      tile.id = row.toString() + "_" + col.toString();
-      tile.className = "tile";
-      tile.style.width = tileSize + "px";
-      tile.style.height = tileSize + "px";
-
-      let num = board[row][col];
-
-      updateTile(tile, num);
-      boardContainer.appendChild(tile);
-    }
+  // Generate cells dynamically
+  for (var i = 0; i < size * size; i++) {
+    var cell = document.createElement("div");
+    cell.className = "cell";
+    board.appendChild(cell);
   }
+
+     var tile = document.createElement("div");
+    tile.className = "tile";
+    board.appendChild(tile);
+
 }
 
 document.addEventListener("keyup", (event) => {
@@ -100,25 +73,16 @@ function clearRowZeroes(row) {
 
   console.log(t_row);
   //board[row] = t_row;
-
 }
 
 function moveUp() {}
 
-
-
-
 function moveDown() {}
-
-
 
 function moveLeft() {
   for (var row = 0; row < size; ++row) {
     clearRowZeroes(row);
   }
-
 }
-
-
 
 function moveRight() {}

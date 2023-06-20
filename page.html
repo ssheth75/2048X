@@ -4,11 +4,6 @@
 
 <!-- 2048 remake : Spin off is that the user can select the size of the board and use other powers other than 2: 3, 4, 5.... -->
 
-
-
-
-
-
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
@@ -25,31 +20,40 @@
 
 </head>
 
+
 <body onload="initGame()">
-        
+
+
+    <div id="title">
+        <h1>x 2048 x</h1>
+    </div>
+    <div id="score">
+        <h3>SCORE:</h3>
+    </div>
+
+
+    <div id="select">
+        <h3>Select Grid Size!</h3>
+    </div>
+
     <div id="input">
-        <h1>2048 X</h1>
-        <!-- GRID INPUT  -->
-        <h4>Select Grid Size!</h4>
+
+
+
         <input type="number" id="gridSizeIn" min="4" max="10" value="4" , onchange="initGame()" />
 
-        <h3> Score:</h3>
     </div>
 
-    <div id="board"> 
 
 
+    <div id="game">
+        <div id="board">
+            <div class="tile"></div>
+        </div>
 
     </div>
-        <!-- GRID -->
-        
-
-
-
+    <!-- GRID -->
 
 </body>
-
-
-
 
 </html>
