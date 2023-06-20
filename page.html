@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+
+
+<!-- 2048 remake : Spin off is that the user can select the size of the board and use other powers other than 2: 3, 4, 5.... -->
+
+
+
+
+
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="style.css">
+    <script src="generateGrid.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap" rel="stylesheet">
+
+
+
+
+
+</head>
+
+<body onload="initGame()">
+        
+    <div id="input">
+        <h1>2048 X</h1>
+        <!-- GRID INPUT  -->
+        <h4>Select Grid Size!</h4>
+        <input type="number" id="gridSizeIn" min="4" max="10" value="4" , onchange="initGame()" />
+
+        <h3> Score:</h3>
+    </div>
+
+    <div id="board"> 
+
+
+
+    </div>
+        <!-- GRID -->
+        
+
+
+
+
+</body>
+
+
+
+
+</html>
