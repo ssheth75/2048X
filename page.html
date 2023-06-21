@@ -9,7 +9,11 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <meta charset="utf-8">
     <link rel="stylesheet" href="style.css">
-    <script src="generateGrid.js"></script>
+    <script src="board.js" type="module"></script>
+    <script src="tile.js" type="module"></script>
+    <script src="main.js" type="module"></script>
+
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap" rel="stylesheet">
@@ -21,8 +25,11 @@
 </head>
 
 
-<body onload="initGame()">
-
+<body">
+    <script type="module">
+        import { awaitInput } from "./main.js";
+        window.onload = awaitInput;
+    </script>
 
     <div id="title">
         <h1>x 2048 x</h1>
@@ -40,7 +47,7 @@
 
 
 
-        <input type="number" id="gridSizeIn" min="4" max="10" value="4" , onchange="initGame()" />
+        <input type="number" id="gridSizeIn" min="4" max="10" value="4" , onchange="awaitInput()" />
 
     </div>
 
