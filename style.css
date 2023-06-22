@@ -71,6 +71,8 @@ input {
 }
 
 .tile {
+  --background-lightness: 90%;
+  --text-lightness: 50%;
   --x: 0;
   --y: 0;
   position: absolute;
@@ -84,7 +86,20 @@ input {
   top: calc(var(--y) * (var(--cell-size) + var(--cell-gap)) + var(--cell-gap));
   left: calc(var(--x) * (var(--cell-size) + var(--cell-gap)) + var(--cell-gap));
   animation: show 200ms ease-in-out;
+  background-color: hsl(200, 50%, var(--background-lightness));
+  color: hsl(200, 50%, var(--text-lightness));
+  transition: 100ms ease-in-out;
 }
+
+#childDiv {
+  opacity: 1;
+  transition: opacity 0.5s ease;
+}
+
+#board.child-removed #childDiv {
+  opacity: 0;
+}
+
 
 @keyframes show {
   0% {

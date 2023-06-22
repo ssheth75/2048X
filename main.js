@@ -2,6 +2,7 @@ import Board from "./board.js";
 
 let gameBoard;
 
+
 export function createBoard() {
   gameBoard = new Board();
   awaitInput();
@@ -10,6 +11,7 @@ export function createBoard() {
 function awaitInput() {
   window.addEventListener("keydown", move, { once: true });
 }
+
 
 function move() {
 
