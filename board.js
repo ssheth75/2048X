@@ -1,11 +1,13 @@
 import Tile from "./tile.js";
 class Board {
   size;
+  count;
   #board;
   #boardArr;
 
   // setup board and initial game state
   constructor() {
+    this.count = 0;
     this.size = document.getElementById("gridSizeIn").value;
     this.#board = document.getElementById("board");
     this.#boardArr = new Array(this.size);
@@ -37,6 +39,10 @@ class Board {
       var tile = new Tile(x, y);
       this.#boardArr[x][y] = tile;
     }
+  }
+
+  generateRandomTiles(){
+    
   }
 
   moveUp() {

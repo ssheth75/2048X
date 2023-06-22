@@ -31,7 +31,7 @@ input {
   top: 16vh;
 }
 
-#select {
+#select{
   position: absolute;
   top: 5vh;
   left: 20vh;
@@ -55,13 +55,13 @@ input {
   --grid-size: 4;
   --cell-size: calc(75vmin / var(--grid-size));
   --cell-gap: calc(4vmin / var(--grid-size));
-  gap: var(--cell-gap);
-  padding: var(--cell-gap);
-  grid-template-columns: repeat(var(--grid-size), var(--cell-size));
-  grid-template-rows: repeat(var(--grid-size), var(--cell-size));
   background-color: #6c6c6c;
   border-radius: 1vmin;
   display: grid;
+  grid-template-columns: repeat(var(--grid-size), var(--cell-size));
+  grid-template-rows: repeat(var(--grid-size), var(--cell-size));
+  gap: var(--cell-gap);
+  padding: var(--cell-gap);
   position: relative;
 }
 
@@ -79,18 +79,16 @@ input {
   align-items: center;
   width: var(--cell-size);
   height: var(--cell-size);
-  top: calc(var(--y) * (var(--cell-size) + var(--cell-gap)) + var(--cell-gap));
-  left: calc(var(--x) * (var(--cell-size) + var(--cell-gap)) + var(--cell-gap));
   background-color: red;
   border-radius: 1vmin;
+  top: calc(var(--y) * (var(--cell-size) + var(--cell-gap)) + var(--cell-gap));
+  left: calc(var(--x) * (var(--cell-size) + var(--cell-gap)) + var(--cell-gap));
   animation: show 200ms ease-in-out;
-  transition: 100ms ease-in-out;
-  
 }
 
 @keyframes show {
   0% {
-    opacity: 0.5;
+    opacity: .5;
     transform: scale(0);
   }
 }

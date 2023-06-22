@@ -11,13 +11,20 @@
     <link rel="stylesheet" href="style.css">
     <script src="board.js" type="module"></script>
     <script src="tile.js" type="module"></script>
+
+
     <script src="main.js" type="module"></script>
 
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap" rel="stylesheet">
+    <script type="module">
+        import { createBoard } from "./main.js";
 
+        window.addEventListener("DOMContentLoaded", () => {
+            const gridSizeInput = document.getElementById("gridSizeIn");
+            gridSizeInput.addEventListener("change", createBoard);
+        });
+
+    </script>
 
 
 
@@ -25,15 +32,17 @@
 </head>
 
 
-<body">
+<body>
     <script type="module">
-        import { awaitInput } from "./main.js";
-        window.onload = awaitInput;
+        import { createBoard } from "./main.js";
+        window.addEventListener("load", () => {
+            createBoard();
+        });
     </script>
 
-    <div id="title">
+    <!-- <div id="title">
         <h1>x 2048 x</h1>
-    </div>
+    </div> -->
     <div id="score">
         <h3>SCORE:</h3>
     </div>
@@ -47,7 +56,7 @@
 
 
 
-        <input type="number" id="gridSizeIn" min="4" max="10" value="4" , onchange="awaitInput()" />
+        <input type="number" id="gridSizeIn" min="4" max="10" value="4" />
 
     </div>
 
