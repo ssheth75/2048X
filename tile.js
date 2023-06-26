@@ -6,7 +6,8 @@ class Tile {
   val;
   background;
   text;
-  
+  merged = false;
+
   constructor(x, y, val, backgroundColor, textColor) {
     this.size = document.getElementById("gridSizeIn").value;
     this.#board = document.getElementById("board");
@@ -27,13 +28,28 @@ class Tile {
   }
 
   setX() {
-    this.element.style.setProperty("--x", this.x);
+    return new Promise((resolve) => {
+      const transitionEnded = () => {
+        this.element.removeEventListener("transitionend", transitionEnded);
+        resolve();
+      };
+      this.element.addEventListener("transitionend", transitionEnded);
+      this.element.style.setProperty("--x", this.x);
+    });
   }
 
   setY() {
-    this.element.style.setProperty("--y", this.y);
+    return new Promise((resolve) => {
+      const transitionEnded = () => {
+        this.element.removeEventListener("transitionend", transitionEnded);
+        resolve();
+      };
+      this.element.addEventListener("transitionend", transitionEnded);
+      this.element.style.setProperty("--y", this.y);
+    });
   }
   setValue() {
+    this.val *= 2; // Double the value
     this.element.textContent = this.val; // Set the text content of the element
   }
   remove() {
@@ -41,11 +57,16 @@ class Tile {
   }
 
   canMerge(tile) {
-    if (this.val == tile.val) {
+    if (this.val == tile.val && tile.merged == false) {
       return true;
     }
     return false;
   }
+
+  removeMergedFlag() {
+
+  }
+
 }
 
 export default Tile;
