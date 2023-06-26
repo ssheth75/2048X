@@ -1,5 +1,6 @@
 import Tile from "./tile.js";
 import Queue from "./queue.js";
+import { showGameOver } from "./main.js";
 
 function coords(x, y) {
   this.x = x;
@@ -43,17 +44,7 @@ class Board {
     for (var i = 0; i < numToGenerate; i++) {
       this.generateRandomTiles();
     }
-    // for (var i = 0; i < numToGenerate; i++) {
-    //   var x = Math.floor(Math.random() * this.size);
-    //   var y = Math.floor(Math.random() * this.size);
-    //   var val = Math.random() < 0.5 ? 2 : 4;
 
-    //   var background = val == 2 ? "80%" : "65%";
-    //   var text = val == 2 ? "30%" : "20%";
-
-    //   if (this.#boardArr[x][y] == 0) this.#boardArr[x][y] = tile;
-    //   else i--;
-    // }
 
     // var tile = new Tile(0, 0, 2, "80%", "20%");
     // var tile2 = new Tile(0, 1, 3, "80%", "20%");
@@ -99,7 +90,8 @@ class Board {
       [-1, 0], // north (0)
       [0, 1], // east (1)
       [1, 0], // south (2)
-      [0, -1]]; // west (3)
+      [0, -1],
+    ]; // west (3)
 
     var visited = new Array(this.size);
     for (var i = 0; i < this.size; ++i) {
@@ -125,10 +117,11 @@ class Board {
           continue;
         }
 
-        if (this.#boardArr[curr.x][curr.y].val == this.#boardArr[row][col].val) {
+        if (
+          this.#boardArr[curr.x][curr.y].val == this.#boardArr[row][col].val
+        ) {
           return false;
-        } 
-        else if (!visited[row][col]) {
+        } else if (!visited[row][col]) {
           q.push(new coords(row, col));
         }
       }
@@ -165,6 +158,7 @@ class Board {
     if (numOpenCells == 0) {
       if (this.checkGameOver()) {
         console.log("Game Over");
+        showGameOver(10);
         return;
       }
     }
