@@ -13,16 +13,16 @@ function awaitInput() {
 }
 
 
-function move() {
+async function move() {
 
   if (event.code == "ArrowUp") {
-    gameBoard.moveUp();
+    await gameBoard.moveUp();
   } else if (event.code == "ArrowDown") {
-    gameBoard.moveDown();
+    await gameBoard.moveDown();
   } else if (event.code == "ArrowLeft") {
-    gameBoard.moveLeft();
+    await gameBoard.moveLeft();
   } else if (event.code == "ArrowRight") {
-    gameBoard.moveRight();
+    await gameBoard.moveRight();
   }
   awaitInput();
 }

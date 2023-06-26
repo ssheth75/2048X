@@ -1,24 +1,9 @@
 import Tile from "./tile.js";
+import Queue from "./queue.js";
 
-function waitForTransitionEnd(element) {
-  return new Promise((resolve) => {
-    const listener = () => {
-      resolve();
-    };
-    element.addEventListener("animationend", listener, { once: true });
-
-    // Set a timeout as a fallback to ensure the Promise resolves even if the animationend event doesn't fire
-    setTimeout(() => {
-      resolve();
-    }, getAnimationDuration(element) * 1000); // Adjust the delay based on the animation duration
-  });
-}
-
-function getAnimationDuration(element) {
-  const styles = window.getComputedStyle(element);
-  const duration = parseFloat(styles.animationDuration) || 0;
-  const delay = parseFloat(styles.animationDelay) || 0;
-  return duration + delay;
+function coords(x, y) {
+  this.x = x;
+  this.y = y;
 }
 
 class Board {
@@ -55,43 +40,132 @@ class Board {
     if (this.size >= 4 && this.size <= 6) numToGenerate = 2;
     else numToGenerate = 3;
 
+    for (var i = 0; i < numToGenerate; i++) {
+      this.generateRandomTiles();
+    }
     // for (var i = 0; i < numToGenerate; i++) {
-    // var x = Math.floor(Math.random() * this.size);
-    // var y = Math.floor(Math.random() * this.size);
-    // var val = Math.random() < 0.5 ? 2 : 4;
+    //   var x = Math.floor(Math.random() * this.size);
+    //   var y = Math.floor(Math.random() * this.size);
+    //   var val = Math.random() < 0.5 ? 2 : 4;
 
-    // var background = val == 2 ? "80%" : "65%";
-    // var text = val == 2 ? "30%" : "20%";
+    //   var background = val == 2 ? "80%" : "65%";
+    //   var text = val == 2 ? "30%" : "20%";
 
-    var tile = new Tile(0, 0, 2, "80%", "20%");
-    var tile2 = new Tile(1, 0, 2, "80%", "20%");
-    var tile3 = new Tile(2, 0, 2, "80%", "20%");
-    var tile4 = new Tile(3, 0, 2, "80%", "20%");
+    //   if (this.#boardArr[x][y] == 0) this.#boardArr[x][y] = tile;
+    //   else i--;
+    // }
 
-    this.#boardArr[0][0] = tile;
-    this.#boardArr[1][0] = tile2;
-    this.#boardArr[2][0] = tile3;
-    this.#boardArr[3][0] = tile4;
+    // var tile = new Tile(0, 0, 2, "80%", "20%");
+    // var tile2 = new Tile(0, 1, 3, "80%", "20%");
+    // var tile3 = new Tile(0, 2, 4, "80%", "20%");
+    // var tile4 = new Tile(0, 3, 5, "80%", "20%");
+    // var tile5 = new Tile(1, 0, 2, "80%", "20%");
+    // var tile6 = new Tile(1, 1, 7, "80%", "20%");
+    // var tile7 = new Tile(1, 2, 8, "80%", "20%");
+    // var tile8 = new Tile(1, 3, 9, "80%", "20%");
+    // var tile9 = new Tile(2, 0, 9, "80%", "20%");
+    // var tile10 = new Tile(2, 1, 11, "80%", "20%");
+    // var tile11 = new Tile(2, 2, 12, "80%", "20%");
+    // var tile12 = new Tile(2, 3, 13, "80%", "20%");
+    // var tile13 = new Tile(3, 0, 14, "80%", "20%");
+    // var tile14 = new Tile(3, 1, 15, "80%", "20%");
+    // var tile15 = new Tile(3, 2, 16, "80%", "20%");
+    // var tile16 = new Tile(3, 3, 17, "80%", "20%");
 
-    // if (this.#boardArr[x][y] == 0) this.#boardArr[x][y] = tile;
-    // else i--;
-    //}
+    // this.#boardArr[0][0] = tile;
+    // this.#boardArr[0][1] = tile2;
+    // this.#boardArr[0][2] = tile3;
+    // this.#boardArr[0][3] = tile4;
+    // this.#boardArr[1][0] = tile5;
+    // this.#boardArr[1][1] = tile6;
+    // this.#boardArr[1][2] = tile7;
+    // this.#boardArr[1][3] = tile8;
+    // this.#boardArr[2][0] = tile9;
+    // this.#boardArr[2][1] = tile10;
+    // this.#boardArr[2][2] = tile11;
+    // this.#boardArr[2][3] = tile12;
+    // this.#boardArr[3][0] = tile13;
+    // this.#boardArr[3][1] = tile14;
+    // this.#boardArr[3][2] = tile15;
+    // this.#boardArr[3][3] = tile16;
+
     console.table(this.#boardArr);
   }
 
-  generateRandomTiles() {
-    while (true) {
-      var x = Math.floor(Math.random() * this.size);
-      var y = Math.floor(Math.random() * this.size);
-      var val = Math.random() < 0.5 ? 2 : 4;
+  // Use bfs to check if there are any possible moves
+  checkGameOver() {
+    // The directions matrix to move all 4 directions
+    var directions = [
+      [-1, 0], // north (0)
+      [0, 1], // east (1)
+      [1, 0], // south (2)
+      [0, -1]]; // west (3)
 
-      var background = val == 2 ? "80%" : "65%";
+    var visited = new Array(this.size);
+    for (var i = 0; i < this.size; ++i) {
+      visited[i] = new Array(this.size);
+      for (var j = 0; j < this.size; ++j) {
+        visited[i][j] = false;
+      }
+    }
+
+    var q = new Queue();
+    q.push(new coords(0, 0));
+
+    while (!q.isEmpty()) {
+      var curr = q.front();
+      q.pop();
+      visited[curr.x][curr.y] = true;
+
+      for (var i = 0; i < 4; ++i) {
+        var row = curr.x + directions[i][0];
+        var col = curr.y + directions[i][1];
+
+        if (row < 0 || col < 0 || row == this.size || col == this.size) {
+          continue;
+        }
+
+        if (this.#boardArr[curr.x][curr.y].val == this.#boardArr[row][col].val) {
+          return false;
+        } 
+        else if (!visited[row][col]) {
+          q.push(new coords(row, col));
+        }
+      }
+    }
+    return true;
+  }
+
+  generateRandomTiles() {
+    var openCells = [];
+    var numOpenCells = 0;
+
+    for (var r = 0; r < this.size; ++r) {
+      for (var c = 0; c < this.size; ++c) {
+        if (this.#boardArr[r][c] == 0) {
+          openCells.push(new coords(r, c));
+          ++numOpenCells;
+        }
+      }
+    }
+    if (numOpenCells > 0) {
+      var newTileLoc = Math.floor(Math.random() * numOpenCells);
+
+      var x = openCells[newTileLoc].x;
+      var y = openCells[newTileLoc].y;
+      var val = Math.random() < 0.5 ? 2 : 4;
+      var background = val == 2 ? "90%" : "85%";
       var text = val == 2 ? "30%" : "20%";
 
-      var tile = new Tile(x, y, 2, background, text);
-      if (this.#boardArr[x][y] == 0) {
-        this.#boardArr[x][y] = tile;
-        break;
+      var tile = new Tile(x, y, val, background, text);
+      this.#boardArr[x][y] = tile;
+      numOpenCells--;
+    }
+
+    if (numOpenCells == 0) {
+      if (this.checkGameOver()) {
+        console.log("Game Over");
+        return;
       }
     }
   }
@@ -108,14 +182,15 @@ class Board {
 
   async moveLeft() {
     console.log("Moving left");
-    for (var i = 0; i < this.size; ++i) {
-      for (var j = 0; j < this.size; ++j) {
-        if (this.#boardArr[i][j] != 0) {
-          var tile = this.#boardArr[i][j];
-          var x = i;
-          var y = j;
-          // ...
-          this.breakFlag = false;
+    var changed = false;
+
+    for (var col = 0; col < this.size; ++col) {
+      for (var row = 0; row < this.size; ++row) {
+        if (this.#boardArr[row][col] != 0) {
+          var tile = this.#boardArr[row][col];
+          var x = row;
+          var y = col;
+
           while (x > 0) {
             // this.slide(tile, x, y, x - 1, y, "horizontal");
             if (this.#boardArr[x - 1][y] == 0) {
@@ -123,82 +198,35 @@ class Board {
               this.#boardArr[x][y] = 0;
               tile.x = x - 1;
               tile.setX(); // Call updateX() to update the CSS attribute
+              changed = true;
               x--;
             } else if (this.#boardArr[x - 1][y].canMerge(tile)) {
               tile.setValue();
-
-              // Remove the tile from the board on screen
-
               tile.x = x - 1;
               await tile.setX(); // Call updateX() to update the CSS attribute
-
-              this.#boardArr[x][y] = 0;
+              changed = true;
               this.#boardArr[x - 1][y].remove();
+              this.#boardArr[x][y] = 0;
+              tile.merged = true;
               this.#boardArr[x - 1][y] = tile;
               x--;
             } else {
               break;
             }
-            // if (this.breakFlag) {
-            //   this.breakFlag = false;
-            //   break;
-            // }
-            // else x--;
           }
         }
       }
     }
+    this.removeMergedFlag();
+    if (changed) {
+      this.generateRandomTiles();
+    }
     console.table(this.#boardArr);
-    this.generateRandomTiles();
   }
 
   async moveRight() {
     console.log("Moving right");
-    // for (var i = this.size - 1; i >= 0; --i) {
-    //   for (var j = this.size - 1; j >= 0; --j) {
-    //     if (this.#boardArr[i][j] != 0) {
-    //       var tile = this.#boardArr[i][j];
-    //       var x = i;
-    //       var y = j;
-    //       // ...
-    //       this.breakFlag = false;
-
-    //       while (x < this.size - 1) {
-    //         if (this.#boardArr[x + 1][y] == 0) {
-    //           this.#boardArr[x + 1][y] = tile;
-    //           this.#boardArr[x][y] = 0;
-    //           tile.x = x + 1;
-    //           tile.setX(); // Call updateX() to update the CSS attribute
-    //           x++;
-    //         } else if (this.#boardArr[x + 1][y].canMerge(tile)) {
-    //           tile.setValue();
-
-    //           // Remove the tile from the board on screen
-
-    //           tile.x = x + 1;
-    //           await tile.setX(); // Call updateX() to update the CSS attribute
-
-    //           // I want to wait for the transition to end before removing the tile from the board
-    //           // Pause until the transition ends
-    //           this.#boardArr[x][y] = 0;
-
-    //           this.#boardArr[x + 1][y].remove();
-    //           this.#boardArr[x + 1][y] = tile;
-
-    //           x++;
-    //         } else {
-    //           break;
-    //         }
-    //         // this.slide(tile, x, y, x + 1, y, "horizontal");
-    //         // if (this.breakFlag) {
-    //         //   this.breakFlag = false;
-    //         //   break;
-    //         // }
-    //         // else x++;
-    //       }
-    //     }
-    //   }
-    // }
+    var changed = false;
 
     for (var col = 0; col < this.size; ++col) {
       for (var row = this.size - 1; row >= 0; --row) {
@@ -212,13 +240,14 @@ class Board {
               this.#boardArr[x][y] = 0;
               tile.x = x + 1;
               tile.setX(); // Call updateX() to update the CSS attribute
+              changed = true;
               x++;
             } else if (this.#boardArr[x + 1][y].canMerge(tile)) {
               tile.setValue();
               tile.x = x + 1;
               await tile.setX(); // Call updateX() to update the CSS attribute
+              changed = true;
               this.#boardArr[x + 1][y].remove();
-
               this.#boardArr[x][y] = 0;
               tile.merged = true;
               this.#boardArr[x + 1][y] = tile;
@@ -232,19 +261,21 @@ class Board {
     }
 
     this.removeMergedFlag();
+    if (changed) {
+      this.generateRandomTiles();
+    }
     console.table(this.#boardArr);
-    this.generateRandomTiles();
   }
 
   async moveUp() {
     console.log("Moving up");
-    for (var i = 0; i < this.size; ++i) {
-      for (var j = 0; j < this.size; ++j) {
-        if (this.#boardArr[i][j] != 0) {
-          var tile = this.#boardArr[i][j];
-          var x = i;
-          var y = j;
-          this.breakFlag = false;
+    var changed = false;
+    for (var col = 0; col < this.size; ++col) {
+      for (var row = 0; row < this.size; ++row) {
+        if (this.#boardArr[row][col] != 0) {
+          var tile = this.#boardArr[row][col];
+          var x = row;
+          var y = col;
 
           while (y > 0) {
             if (this.#boardArr[x][y - 1] == 0) {
@@ -252,115 +283,77 @@ class Board {
               this.#boardArr[x][y] = 0;
               tile.y = y - 1;
               tile.setY(); // Call updateY() to update the CSS attribute
+              changed = true;
               y--;
             } else if (this.#boardArr[x][y - 1].canMerge(tile)) {
               tile.setValue();
-
               tile.y = y - 1;
-
               await tile.setY(); // Call updateY() to update the CSS attribute
-              this.#boardArr[x][y] = 0;
-
+              changed = true;
               this.#boardArr[x][y - 1].remove();
+              this.#boardArr[x][y] = 0;
+              tile.merged = true;
               this.#boardArr[x][y - 1] = tile;
-
               y--;
             } else {
               break;
             }
-            // this.slide(tile, x, y, x, y - 1, "vertical");
-            // if (this.breakFlag) {
-            //   this.breakFlag = false;
-            //   break;
-            // } else y--;
           }
         }
       }
     }
-    console.log(this.#boardArr);
-    this.generateRandomTiles();
+    this.removeMergedFlag();
+    if (changed) {
+      this.generateRandomTiles();
+    }
+    console.table(this.#boardArr);
   }
 
   async moveDown() {
     console.log("Moving down");
-    for (var i = 0; i < this.size; ++i) {
-      for (var j = this.size - 1; j >= 0; --j) {
-        if (this.#boardArr[i][j] != 0) {
-          var tile = this.#boardArr[i][j];
-          var x = i;
-          var y = j;
-          this.breakFlag = false;
+    var changed = false;
 
-          while (y < this.size - 1) {
+    for (var col = this.size - 1; col >= 0; --col) {
+      for (var row = 0; row < this.size; ++row) {
+        if (this.#boardArr[row][col] != 0) {
+          var tile = this.#boardArr[row][col];
+          var x = row;
+          var y = col;
+
+          while (y + 1 < this.size) {
             if (this.#boardArr[x][y + 1] == 0) {
               this.#boardArr[x][y + 1] = tile;
               this.#boardArr[x][y] = 0;
               tile.y = y + 1;
               tile.setY(); // Call updateY() to update the CSS attribute
+              changed = true;
+
               y++;
             } else if (this.#boardArr[x][y + 1].canMerge(tile)) {
               tile.setValue();
-
               tile.y = y + 1;
               await tile.setY();
-
-              this.#boardArr[x][y] = 0;
+              changed = true;
 
               this.#boardArr[x][y + 1].remove();
+
+              this.#boardArr[x][y] = 0;
+              tile.merged = true;
               this.#boardArr[x][y + 1] = tile;
 
               y++;
             } else {
               break;
             }
-            // this.slide(tile, x, y, x, y + 1, "vertical");
-            // if (this.breakFlag) {
-            //   this.breakFlag = false;
-            //   break;
-            // } else y++;
           }
         }
       }
     }
-    console.table(this.#boardArr);
-    this.generateRandomTiles();
-  }
-
-  slide(tile, x, y, newX, newY, direction) {
-    if (this.#boardArr[newX][newY] == 0) {
-      this.#boardArr[newX][newY] = tile;
-      this.#boardArr[x][y] = 0;
-      if (direction == "horizontal") {
-        tile.x = newX;
-        tile.setX();
-      } else if (direction == "vertical") {
-        tile.y = newY;
-        tile.setY();
-      }
-    } else if (this.#boardArr[newX][newY].canMerge(tile)) {
-      tile.setValue();
-      this.#boardArr[x][y] = 0;
-      if (direction == "horizontal") {
-        tile.x = newX;
-        tile.setX();
-      } else if (direction == "vertical") {
-        tile.y = newY;
-        tile.setY();
-      }
-
-      const removePromise = new Promise((resolve) => {
-        waitForTransitionToEnd(tile.element).then(() => {
-          this.#boardArr[newX][newY].remove();
-          resolve();
-        });
-      });
-      removePromise.then(() => {
-        this.#boardArr[newX][newY] = tile;
-        // --x;
-      });
-    } else {
-      this.breakFlag = true;
+    this.removeMergedFlag();
+    if (changed) {
+      this.generateRandomTiles();
     }
+    console.table(this.#boardArr);
   }
 }
 export default Board;

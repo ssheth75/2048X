@@ -76,19 +76,20 @@ input {
   --x: 0;
   --y: 0;
   position: absolute;
+  font-weight: bold;
   display: flex;
   justify-content: center;
   align-items: center;
   width: var(--cell-size);
   height: var(--cell-size);
-  background-color: red;
   border-radius: 1vmin;
   top: calc(var(--y) * (var(--cell-size) + var(--cell-gap)) + var(--cell-gap));
   left: calc(var(--x) * (var(--cell-size) + var(--cell-gap)) + var(--cell-gap));
   animation: show 200ms ease-in-out;
-  background-color: hsl(200, 50%, var(--background-lightness));
-  color: hsl(200, 50%, var(--text-lightness));
+  background-color: hsl(150, 50%, var(--background-lightness));
+  color: hsl(150, 50%, var(--text-lightness));
   transition: 100ms ease-in-out;
+  font-size: x-large;
 }
 
 #childDiv {
