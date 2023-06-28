@@ -2,7 +2,7 @@
 <html>
 
 
-<!-- 2048 remake : Spin off is that the user can select the size of the board and use other powers other than 2: 3, 4, 5.... -->
+<!-- 2048 remake : Spin off is that the user can select the size of the board. -->
 
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -10,16 +10,11 @@
     <meta charset="utf-8">
     <link rel="stylesheet" href="style.css">
     <script src="queue.js" type="module"></script>
-        <script src="main.js" type="module"></script>
-
-
+    <script src="main.js" type="module"></script>
     <script src="board.js" type="module"></script>
     <script src="tile.js" type="module"></script>
-
-
-
-
     <script type="module">
+
         import { createBoard } from "./main.js";
 
         window.addEventListener("DOMContentLoaded", () => {
@@ -28,12 +23,7 @@
         });
 
     </script>
-
-
-
-
 </head>
-
 
 <body>
     <script type="module">
@@ -43,27 +33,16 @@
         });
     </script>
 
-    <!-- <div id="title">
-        <h1>x 2048 x</h1>
-    </div> -->
+
     <div id="score">
-        <h3>SCORE:</h3>
-    </div>
-
-
-    <div id="select">
-        <h3>Select Grid Size!</h3>
+        <span class="score-label">Score: </span>
+        <span id="scoreValue"></span>
     </div>
 
     <div id="input">
-
-
-
-        <input type="number" id="gridSizeIn" min="4" max="10" value="4" style="height: 40px; font-size: large;" />
-
+        <div id="select">Select Game Size:</div>
+        <input type="number" id="gridSizeIn" min="4" max="10" value="4" style="height: 30px; font-size: large;" />
     </div>
-
-
 
     <div id="game">
         <div id="board">
@@ -72,8 +51,7 @@
 
     </div>
 
-    <!-- GRID -->
-
 </body>
+
 
 </html>

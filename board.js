@@ -2,17 +2,21 @@ import Tile from "./tile.js";
 import Queue from "./queue.js";
 import { showGameOver } from "./main.js";
 
+// Structure to store coordinates and to run bfs for checking game over
 function coords(x, y) {
   this.x = x;
   this.y = y;
 }
 
+// Board class where all game logic and processng is handled
 class Board {
   size;
   count;
   #board;
   #boardArr;
   breakFlag = false;
+  score = 0;
+  scoreValue = document.getElementById("scoreValue");
 
   // setup board and initial game state
   constructor() {
@@ -20,6 +24,9 @@ class Board {
     this.size = document.getElementById("gridSizeIn").value;
     this.#board = document.getElementById("board");
     this.#boardArr = [];
+
+    // Initialize the game score on the screen as 0
+    this.updateScore();
 
     // Create board array
     for (var i = 0; i < this.size; ++i) {
@@ -44,55 +51,25 @@ class Board {
     for (var i = 0; i < numToGenerate; i++) {
       this.generateRandomTiles();
     }
-
-
-    // var tile = new Tile(0, 0, 2, "80%", "20%");
-    // var tile2 = new Tile(0, 1, 3, "80%", "20%");
-    // var tile3 = new Tile(0, 2, 4, "80%", "20%");
-    // var tile4 = new Tile(0, 3, 5, "80%", "20%");
-    // var tile5 = new Tile(1, 0, 2, "80%", "20%");
-    // var tile6 = new Tile(1, 1, 7, "80%", "20%");
-    // var tile7 = new Tile(1, 2, 8, "80%", "20%");
-    // var tile8 = new Tile(1, 3, 9, "80%", "20%");
-    // var tile9 = new Tile(2, 0, 9, "80%", "20%");
-    // var tile10 = new Tile(2, 1, 11, "80%", "20%");
-    // var tile11 = new Tile(2, 2, 12, "80%", "20%");
-    // var tile12 = new Tile(2, 3, 13, "80%", "20%");
-    // var tile13 = new Tile(3, 0, 14, "80%", "20%");
-    // var tile14 = new Tile(3, 1, 15, "80%", "20%");
-    // var tile15 = new Tile(3, 2, 16, "80%", "20%");
-    // var tile16 = new Tile(3, 3, 17, "80%", "20%");
-
-    // this.#boardArr[0][0] = tile;
-    // this.#boardArr[0][1] = tile2;
-    // this.#boardArr[0][2] = tile3;
-    // this.#boardArr[0][3] = tile4;
-    // this.#boardArr[1][0] = tile5;
-    // this.#boardArr[1][1] = tile6;
-    // this.#boardArr[1][2] = tile7;
-    // this.#boardArr[1][3] = tile8;
-    // this.#boardArr[2][0] = tile9;
-    // this.#boardArr[2][1] = tile10;
-    // this.#boardArr[2][2] = tile11;
-    // this.#boardArr[2][3] = tile12;
-    // this.#boardArr[3][0] = tile13;
-    // this.#boardArr[3][1] = tile14;
-    // this.#boardArr[3][2] = tile15;
-    // this.#boardArr[3][3] = tile16;
-
     console.table(this.#boardArr);
   }
 
-  // Use bfs to check if there are any possible moves
+  // Update the score on the screen after each move
+  updateScore() {
+    this.scoreValue.textContent = this.score;
+  }
+
+  // Use BFS to check if there are any possible moves
   checkGameOver() {
     // The directions matrix to move all 4 directions
     var directions = [
-      [-1, 0], // north (0)
-      [0, 1], // east (1)
-      [1, 0], // south (2)
+      [-1, 0],
+      [0, 1],
+      [1, 0],
       [0, -1],
-    ]; // west (3)
+    ];
 
+    // Create a visited matrix to keep track of visited cells
     var visited = new Array(this.size);
     for (var i = 0; i < this.size; ++i) {
       visited[i] = new Array(this.size);
@@ -113,26 +90,32 @@ class Board {
         var row = curr.x + directions[i][0];
         var col = curr.y + directions[i][1];
 
+        // Check if the cell is out of bounds
         if (row < 0 || col < 0 || row == this.size || col == this.size) {
           continue;
         }
-
+        // Check if adjacent cells can merge
         if (
           this.#boardArr[curr.x][curr.y].val == this.#boardArr[row][col].val
         ) {
           return false;
-        } else if (!visited[row][col]) {
+        }
+        //Push adjacent cells to queue for further searching
+        else if (!visited[row][col]) {
           q.push(new coords(row, col));
         }
       }
     }
+    // No possible moves can be made if queue is empty
     return true;
   }
 
+  // Logic to generate random tiles on the board after each move
   generateRandomTiles() {
     var openCells = [];
     var numOpenCells = 0;
 
+    // Search for open cells
     for (var r = 0; r < this.size; ++r) {
       for (var c = 0; c < this.size; ++c) {
         if (this.#boardArr[r][c] == 0) {
@@ -141,9 +124,12 @@ class Board {
         }
       }
     }
+
+    // Generate new tile if there are open cells
     if (numOpenCells > 0) {
       var newTileLoc = Math.floor(Math.random() * numOpenCells);
 
+      // Generate either a 2 or 4 tile
       var x = openCells[newTileLoc].x;
       var y = openCells[newTileLoc].y;
       var val = Math.random() < 0.5 ? 2 : 4;
@@ -155,15 +141,17 @@ class Board {
       numOpenCells--;
     }
 
+    // Check if game is over after inserting the new tile
     if (numOpenCells == 0) {
       if (this.checkGameOver()) {
         console.log("Game Over");
-        showGameOver(10);
+        showGameOver(this.score);
         return;
       }
     }
   }
 
+  // After each move remove all merged flags to false for next move processing
   removeMergedFlag() {
     for (var i = 0; i < this.size; ++i) {
       for (var j = 0; j < this.size; ++j) {
@@ -174,6 +162,7 @@ class Board {
     }
   }
 
+  // Move tiles left on the board
   async moveLeft() {
     console.log("Moving left");
     var changed = false;
@@ -186,18 +175,18 @@ class Board {
           var y = col;
 
           while (x > 0) {
-            // this.slide(tile, x, y, x - 1, y, "horizontal");
             if (this.#boardArr[x - 1][y] == 0) {
               this.#boardArr[x - 1][y] = tile;
               this.#boardArr[x][y] = 0;
               tile.x = x - 1;
-              tile.setX(); // Call updateX() to update the CSS attribute
+              tile.setX(); // Call setX() to update the CSS attribute
               changed = true;
               x--;
             } else if (this.#boardArr[x - 1][y].canMerge(tile)) {
-              tile.setValue();
+              this.score += tile.setValue();
+              console.log(this.score);
               tile.x = x - 1;
-              await tile.setX(); // Call updateX() to update the CSS attribute
+              await tile.setX(); // Call setX() to update the CSS attribute
               changed = true;
               this.#boardArr[x - 1][y].remove();
               this.#boardArr[x][y] = 0;
@@ -212,12 +201,15 @@ class Board {
       }
     }
     this.removeMergedFlag();
+    this.updateScore();
+    // Only generate new tiles if the board has changed
     if (changed) {
       this.generateRandomTiles();
     }
     console.table(this.#boardArr);
   }
 
+  // Move tiles right on the board
   async moveRight() {
     console.log("Moving right");
     var changed = false;
@@ -237,7 +229,8 @@ class Board {
               changed = true;
               x++;
             } else if (this.#boardArr[x + 1][y].canMerge(tile)) {
-              tile.setValue();
+              this.score += tile.setValue();
+              console.log(this.score);
               tile.x = x + 1;
               await tile.setX(); // Call updateX() to update the CSS attribute
               changed = true;
@@ -255,12 +248,15 @@ class Board {
     }
 
     this.removeMergedFlag();
+    this.updateScore();
+
     if (changed) {
       this.generateRandomTiles();
     }
     console.table(this.#boardArr);
   }
 
+  // Move tiles up on the board
   async moveUp() {
     console.log("Moving up");
     var changed = false;
@@ -280,7 +276,8 @@ class Board {
               changed = true;
               y--;
             } else if (this.#boardArr[x][y - 1].canMerge(tile)) {
-              tile.setValue();
+              this.score += tile.setValue();
+              console.log(this.score);
               tile.y = y - 1;
               await tile.setY(); // Call updateY() to update the CSS attribute
               changed = true;
@@ -297,12 +294,15 @@ class Board {
       }
     }
     this.removeMergedFlag();
+    this.updateScore();
+
     if (changed) {
       this.generateRandomTiles();
     }
     console.table(this.#boardArr);
   }
 
+  // Move tiles down on the board
   async moveDown() {
     console.log("Moving down");
     var changed = false;
@@ -319,14 +319,15 @@ class Board {
               this.#boardArr[x][y + 1] = tile;
               this.#boardArr[x][y] = 0;
               tile.y = y + 1;
-              tile.setY(); // Call updateY() to update the CSS attribute
+              tile.setY(); // Call setY() to update the CSS attribute
               changed = true;
 
               y++;
             } else if (this.#boardArr[x][y + 1].canMerge(tile)) {
-              tile.setValue();
+              this.score += tile.setValue();
+              console.log(this.score);
               tile.y = y + 1;
-              await tile.setY();
+              await tile.setY(); // Call setY() to update the CSS attribute
               changed = true;
 
               this.#boardArr[x][y + 1].remove();
@@ -344,10 +345,13 @@ class Board {
       }
     }
     this.removeMergedFlag();
+    this.updateScore();
+
     if (changed) {
       this.generateRandomTiles();
     }
     console.table(this.#boardArr);
   }
 }
+
 export default Board;

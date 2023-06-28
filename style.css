@@ -12,45 +12,54 @@ body {
   height: 100vh;
   margin: 0;
   background-color: #1a1a1a;
+  position: relative;
 }
 
-input {
-  flex-direction: column;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: #1a1a1a;
-  top: 10vh;
-  left: 25vh;
-  position: absolute;
-  color: rgb(126, 194, 194);
+#input {
+  position: fixed;
+  top: 4vh;
+  left: 5vh;
+  color: rgb(255, 255, 255);
+  font-size: large;
+  font-weight: bold;
+}
+
+#select {
+  display: inline-block;
+  margin-right: 10px;
+}
+
+input[type="number"] {
+  height: 30px;
+  font-size: large;
+  font-weight: bold;
+  background-color: #232323;
+  color: #ffffff; 
 }
 
 #game {
-  position: absolute;
-  top: 16vh;
-}
-
-
-
-#select{
-  position: absolute;
-  top: 5vh;
-  left: 20vh;
-  color: rgb(126, 194, 194);
+  margin-top: 4vh;
+  position: relative;
+  text-align: center; 
 }
 
 #score {
-  position: absolute;
-  top: 5vh;
-  right: 20vh;
-  color: rgb(126, 194, 194);
+  position: fixed;
+  top: 4vh;
+  right: 6vh;
+  color: rgb(255, 255, 255);
+  font-size: large;
+  font-weight: bold;
 }
 
-#title {
-  top: 2vh;
-  position: absolute;
-  color: rgb(126, 194, 194);
+#scoreValue {
+  display: inline-block;
+  min-width: 50px; 
+}
+
+#scoreLabel {
+  margin-right: 5px;
+  white-space: nowrap;
 }
 
 #board {
@@ -88,8 +97,8 @@ input {
   top: calc(var(--y) * (var(--cell-size) + var(--cell-gap)) + var(--cell-gap));
   left: calc(var(--x) * (var(--cell-size) + var(--cell-gap)) + var(--cell-gap));
   animation: show 200ms ease-in-out;
-  background-color: hsl(150, 50%, var(--background-lightness));
-  color: hsl(150, 50%, var(--text-lightness));
+  background-color: hsl(120, 50%, var(--background-lightness));
+  color: hsl(120, 50%, var(--text-lightness));
   transition: 100ms ease-in-out;
   font-size: x-large;
 }
@@ -103,10 +112,9 @@ input {
   opacity: 0;
 }
 
-
 @keyframes show {
   0% {
-    opacity: .5;
+    opacity: 0.5;
     transform: scale(0);
   }
 }

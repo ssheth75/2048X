@@ -1,13 +1,13 @@
 import Board from "./board.js";
 
 let gameBoard;
+let gameOverDiv;
 
 export function createBoard() {
   gameBoard = new Board();
+
   awaitInput();
 }
-
-let gameOverDiv; // Declare the gameOverDiv variable outside the function for global access
 
 export function showGameOver(score) {
   // Create the Game Over div

@@ -1,3 +1,4 @@
+// QUEUE data structure to use in BFS
 class Queue {
   constructor() {
     this.items = [];
