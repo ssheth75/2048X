@@ -11,7 +11,6 @@ function coords(x, y) {
 // Board class where all game logic and processng is handled
 class Board {
   size;
-  count;
   #board;
   #boardArr;
   breakFlag = false;
@@ -20,7 +19,6 @@ class Board {
 
   // setup board and initial game state
   constructor() {
-    this.count = 0;
     this.size = document.getElementById("gridSizeIn").value;
     this.#board = document.getElementById("board");
     this.#boardArr = [];
