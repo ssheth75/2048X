@@ -97,8 +97,8 @@ input[type="number"] {
   top: calc(var(--y) * (var(--cell-size) + var(--cell-gap)) + var(--cell-gap));
   left: calc(var(--x) * (var(--cell-size) + var(--cell-gap)) + var(--cell-gap));
   animation: show 200ms ease-in-out;
-  background-color: hsl(120, 50%, var(--background-lightness));
-  color: hsl(120, 50%, var(--text-lightness));
+  background-color: hsl(100, 50%, var(--background-lightness));
+  color: hsl(100, 50%, var(--text-lightness));
   transition: 100ms ease-in-out;
   font-size: x-large;
 }
