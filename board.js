@@ -89,7 +89,7 @@ class Board {
         var col = curr.y + directions[i][1];
 
         // Check if the cell is out of bounds
-        if (row < 0 || col < 0 || row == this.size || col == this.size) {
+        if (row < 0 || col < 0 || row == this.size || col == this.size || visited[row][col]) {
           continue;
         }
         // Check if adjacent cells can merge
@@ -99,7 +99,7 @@ class Board {
           return false;
         }
         //Push adjacent cells to queue for further searching
-        else if (!visited[row][col]) {
+        else {
           q.push(new coords(row, col));
         }
       }
